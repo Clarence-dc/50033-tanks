@@ -95,6 +95,8 @@ public class GameManager : MonoBehaviour
 
         m_MessageText.text = string.Empty;
 
+        StartCoroutine(SpeedUpOnDead());
+
         while (!OneTankLeft()) yield return null;
     }
 
@@ -114,6 +116,26 @@ public class GameManager : MonoBehaviour
         m_MessageText.text = message;
 
         yield return m_EndWait;
+    }
+
+    private IEnumerator SpeedUpOnDead()
+    {   
+        // if player is not dead
+        if (m_Tanks[0].m_Instance.activeSelf){
+            // wait until they are dead
+		    yield  return  new  WaitUntil(() =>  !m_Tanks[0].m_Instance.activeSelf);
+	    }
+        // while player is dead
+        while (!m_Tanks[0].m_Instance.activeSelf){
+            // key F is pressed
+            if (Input.GetKeyDown(KeyCode.F)){
+                // speed up game 5X
+                Time.timeScale = 5.0f;
+            };
+            yield return null;
+        }
+        // return time scale back to normal
+        Time.timeScale = 1.0f;
     }
 
 
